@@ -6,6 +6,7 @@ const gameController = require('./controllers/game.controller');
 const PlayersController = require('./controllers/players.controller');
 const EVENTS = require('./config/events');
 
+const app = express();
 const wss = new WebSocket.Server({ port: 8080 });
 
 
@@ -35,4 +36,17 @@ wss.on('connection', ws => {
 		players: playersController.players(),
 		activePlayer: gameController.getActivePlayer()
 	}));
+});
+
+// Serve static assets.
+app.use(express.static(join(__dirname, '../client/assets/js/')));
+app.use(express.static(join(__dirname, '../client/assets/css/')));
+
+app.get('*', (req, res) => {
+	res.sendFile(join(__dirname, '../client/index.html'));
+});
+
+// Start the server
+app.listen(8000, () => {
+	console.log('Magic happens at localhost:8000');
 });
