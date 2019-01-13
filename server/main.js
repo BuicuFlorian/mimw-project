@@ -8,8 +8,21 @@ const EVENTS = require('./config/events');
 
 const app = express();
 const port = process.env.PORT || 8080;
-const wss = new WebSocket.Server({ port: 8080 });
 
+// Serve static assets.
+app.use(express.static(join(__dirname, '../client/assets/js/')));
+app.use(express.static(join(__dirname, '../client/assets/css/')));
+
+app.get('*', (req, res) => {
+  res.sendFile(join(__dirname, '../client/index.html'));
+});
+
+// Start the server
+const server = app.listen(port, () => {
+  console.log(`Magic happens at localhost:${port}`);
+});
+
+const wss = new WebSocket.Server({ server });
 
 // Broadcast to all clients.
 wss.broadcast = data => {
@@ -39,15 +52,3 @@ wss.on('connection', ws => {
   }));
 });
 
-// Serve static assets.
-app.use(express.static(join(__dirname, '../client/assets/js/')));
-app.use(express.static(join(__dirname, '../client/assets/css/')));
-
-app.get('*', (req, res) => {
-  res.sendFile(join(__dirname, '../client/index.html'));
-});
-
-// Start the server
-app.listen(port, () => {
-  console.log('Magic happens at localhost:8000');
-});
