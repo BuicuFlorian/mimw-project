@@ -1,4 +1,4 @@
-const url = 'wss://mimw-project.herokuapp.com';
+const url = 'wss://mimw-project.herokuapp.com:8080';
 const connection = new WebSocket(url);
 
 connection.onopen = () => {
