@@ -1,0 +1,43 @@
+{
+  "players": {
+    "player_1": {
+      "id": "",
+      "color": "red",
+      "active": true,
+      "blocked": false
+    },
+    "player_2": {
+      "id": "",
+      "color": "blue",
+      "active": false,
+      "blocked": false
+    },
+    "player_3": {
+      "id": "",
+      "color": "green",
+      "active": false,
+      "blocked": false
+    },
+    "player_4": {
+      "id": "",
+      "color": "yellow",
+      "active": false,
+      "blocked": false
+    },
+    "player_5": {
+      "id": "",
+      "color": "magenta",
+      "active": false,
+      "blocked": false
+    },
+    "total": 0
+  },
+  "table": [
+    [0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0]
+  ]
+}
