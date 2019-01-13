@@ -7,6 +7,7 @@ const PlayersController = require('./controllers/players.controller');
 const EVENTS = require('./config/events');
 
 const app = express();
+const port = process.env.PORT || 8080;
 const wss = new WebSocket.Server({ port: 8080 });
 
 
@@ -47,6 +48,6 @@ app.get('*', (req, res) => {
 });
 
 // Start the server
-app.listen(8000, () => {
+app.listen(port, () => {
 	console.log('Magic happens at localhost:8000');
 });
