@@ -1,5 +1,5 @@
-const url = 'wss://mimw-project.herokuapp.com:8080';
-const connection = new WebSocket(url);
+const host = location.origin.replace(/^http/, 'ws');
+const connection = new WebSocket(host);
 
 connection.onopen = () => {
   console.log('Connected to the server.');
