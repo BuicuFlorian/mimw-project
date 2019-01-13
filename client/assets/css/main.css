@@ -1,0 +1,7 @@
+body {
+  padding-top: 90px;
+}
+
+tbody>tr>td {
+  height: 60px;
+}
