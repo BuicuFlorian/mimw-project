@@ -1,0 +1,145 @@
+const crypto = require('crypto');
+const gameController = require('./game.controller');
+
+/**
+ * Class used to manage the users.
+ *
+ * @author Florian Buicu
+ */
+class PlayersController {
+  /**
+   * Class constructor.
+   *
+   * @param {WebSocket.Server} webSocketServer
+   * @param {WebSocket} webSocket
+   */
+  constructor(webSocketServer, webSocket) {
+    this.webSocketServer = webSocketServer;
+    this.webSocket = webSocket;
+  }
+
+  /**
+   * Add a new player to the game.
+   *
+   * @returns {Void}
+   */
+  async joinGame() {
+    const totalPlayers = this.players();
+
+    try {
+      if (totalPlayers + 1 <= 5) {
+        const playerId = await this.generatePlayerId(7);
+        const playerColor = gameController.addPlayer(playerId);
+
+        this.webSocket.send(JSON.stringify({
+          success: 'Welcome',
+          playerId,
+          playerColor
+        }));
+
+        if (totalPlayers + 1 === 1) {
+          this.webSocket.send(JSON.stringify({
+            message: 'Please wait until more players will join.',
+          }));
+        }
+
+        if (totalPlayers + 1 >= 2) {
+          this.webSocketServer.broadcast(JSON.stringify({
+            table: gameController.getTable(),
+            activePlayer: gameController.getActivePlayer()
+          }));
+        }
+
+        this.webSocketServer.broadcast(JSON.stringify({
+          players: totalPlayers + 1
+        }));
+      } else {
+        this.webSocket.send(JSON.stringify({ error: 'No room!' }));
+      }
+    } catch (error) {
+      console.error('Could not join the game!');
+      console.error(error);
+    }
+  }
+
+  /**
+   * Remove a player from the game.
+   */
+  leaveGame() {
+
+  }
+
+  /**
+   * Add a new game watcher.
+   *
+   * @returns {Void}
+   */
+  watchGame() {
+    if (this.players() > 0) {
+      const table = gameController.getTable();
+
+      this.webSocket.send(JSON.stringify({
+        watchMode: true,
+        table,
+        gameStatus: gameController.getGameStatus()
+      }));
+    } else {
+      this.webSocket.send(JSON.stringify({ error: 'Noone is playing right now.' }));
+    }
+  }
+
+  /**
+   * Update the game table.
+   *
+   * @param {Object} data
+   * @return {Void}
+   */
+  move(data) {
+    try {
+      const gameInfo = gameController.updateTable(data);
+      let message = { table: gameInfo.table };
+
+      if (gameInfo.hasOwnProperty('gameOver')) {
+        message.gameOver = gameInfo.gameOver;
+      } else {
+        message.activePlayer = gameController.getActivePlayer();
+      }
+
+      this.webSocketServer.broadcast(JSON.stringify(message));
+    } catch (error) {
+      console.error(error.message);
+      this.webSocket.send(JSON.stringify({ error: error.message }));
+    }
+  }
+
+  /**
+   * Generate player's ID.
+   *
+   * @param {Number} length
+   * @returns {String}
+   */
+  async generatePlayerId(length) {
+    try {
+      const playerId = await crypto.randomBytes(length).toString('hex');
+
+      return playerId;
+    } catch (error) {
+      console.error('The player ID was not generated!');
+      console.error(error);
+    }
+  }
+
+  /**
+   * Get the total number of players.
+   *
+   * @return {Number}
+   */
+  players() {
+    return gameController.totalPlayers();
+  }
+}
+
+/**
+ * Exporting PlayersController class.
+ */
+module.exports = PlayersController;
