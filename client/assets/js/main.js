@@ -8,6 +8,7 @@ connection.onopen = () => {
 
 connection.onmessage = event => {
   const data = JSON.parse(event.data);
+  console.log(data);
   const keys = Object.keys(data);
 
   keys.forEach(key => {
@@ -18,5 +19,11 @@ connection.onmessage = event => {
 };
 
 connection.onerror = error => {
-  console.log(`WebSocket error: ${error}`);
+  console.log(`WebSocket error: ${JSON.stringify(error)}`);
 };
+
+connection.onclose = () => {
+  setInterval(() => {
+    connection.send(JSON.stringify({ text: 'New client connected! '}));
+  }, 1000)
+}
