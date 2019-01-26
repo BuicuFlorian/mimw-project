@@ -4,4 +4,9 @@ body {
 
 tbody>tr>td {
   height: 60px;
+  cursor: grab;
+}
+
+.pointer {
+	cursor: pointer;
 }
