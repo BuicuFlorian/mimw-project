@@ -1,37 +1,64 @@
 {
+  "game_id": "",
   "players": {
     "player_1": {
       "id": "",
       "color": "red",
       "active": true,
-      "blocked": false
+      "blocked": false,
+      "jokers": {
+        "double_move": true,
+        "replacement": true,
+        "freedom": true
+      }
     },
     "player_2": {
       "id": "",
       "color": "blue",
       "active": false,
-      "blocked": false
+      "blocked": false,
+       "jokers": {
+        "double_move": true,
+        "replacement": true,
+        "freedom": true
+      }
     },
     "player_3": {
       "id": "",
       "color": "green",
       "active": false,
-      "blocked": false
+      "blocked": false,
+       "jokers": {
+        "double_move": true,
+        "replacement": true,
+        "freedom": true
+      }
     },
     "player_4": {
       "id": "",
       "color": "yellow",
       "active": false,
-      "blocked": false
+      "blocked": false,
+       "jokers": {
+        "double_move": true,
+        "replacement": true,
+        "freedom": true
+      }
     },
     "player_5": {
       "id": "",
       "color": "magenta",
       "active": false,
-      "blocked": false
+      "blocked": false,
+       "jokers": {
+        "double_move": true,
+        "replacement": true,
+        "freedom": true
+      }
     },
     "total": 0
   },
+  "max_players": 5,
   "table": [
     [0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0],
