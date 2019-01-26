@@ -25,15 +25,25 @@ function colorTable(table) {
  * @return {Void}
  */
 function getPosition(elementId) {
-  const playerId = localStorage.getItem(btoa('playerId'));
-  const activePlayer = localStorage.getItem(btoa('activePlayer'));
+  const playerId = storage['playerId']();
+  const activePlayer = storage['activePlayer']();
 
-  if (playerId && playerId === activePlayer) {
-    connection.send(JSON.stringify({
+  if (playerId && playerId === activePlayer.id) {
+    const moveInfo = {
       event: 'MOVE',
       playerId: localStorage.getItem(btoa('playerId')),
       position: elementId
-    }));
+    }
+
+    if (storage['selectedJoker']()) {
+      moveInfo.joker = storage['selectedJoker']();
+
+      setTimeout(() => {
+        localStorage.removeItem(btoa('selectedJoker'));
+      }, 1000);
+    }
+
+    connection.send(JSON.stringify(moveInfo));
   }
 }
 
@@ -63,4 +73,67 @@ function showTable() {
  */
 function setTitle(text) {
   document.getElementById('title').innerHTML = text;
+}
+
+/**
+ * Format the given name.
+ * 
+ * @param {String} name
+ * @return {String}
+ */
+function formatPlayerName(name) {
+  let splitName = name.split('_');
+
+  return `${splitName[0].charAt(0).toUpperCase()}${splitName[0].slice(1)} ${splitName[1]}`;
+}
+
+/**
+ * Select the given joker.
+ * 
+ * @param {String} name
+ * @return {Void}
+ */
+function selectJoker(name) {
+  if (storage['selectedJoker']()) {
+    const selectedJoker = document.getElementById(storage['selectedJoker']());
+    selectedJoker.style = '';
+  } 
+
+  localStorage.setItem(btoa('selectedJoker'), name);
+
+  const joker = document.getElementById(name);
+  joker.style = 'color: white; background: orange;'
+}
+
+/**
+ * Insert active jokers into the list.
+ * 
+ * @param {Object} jokers
+ */
+function addJokers(jokers) {
+  const ul = document.getElementById('jokers');
+
+  for (let name in jokers) {
+    if (jokers[name] !== false) {
+      let newList = document.createElement('li');
+      newList.id = name;
+      newList.innerText = name
+      newList.classList = 'list-group-item pointer';
+
+      newList.onclick = function () {
+        selectJoker(this.id);
+      }
+
+      ul.appendChild(newList);
+    }
+  }
+}
+
+/**
+ * Hide jokers card.
+ */
+function hideJokers() {
+  const jokers = document.getElementById('jokers-panel');
+
+  jokers.style = 'display: none;'
 }
