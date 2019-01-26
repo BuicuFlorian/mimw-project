@@ -6,7 +6,11 @@
 const storage = {
 	playerId: () => localStorage.getItem(btoa('playerId')),
 	playerColor: () => localStorage.getItem(btoa('playerColor')),
-	activePlayer: () => localStorage.getItem(btoa('activePlayer')),
-  table: () => localStorage.getItem(btoa('table')),
-  watchMode: () => localStorage.getItem(btoa('watchMode'))
+	activePlayer: () => JSON.parse(localStorage.getItem(btoa('activePlayer'))),
+  table: () => JSON.parse(localStorage.getItem(btoa('table'))),
+  watchMode: () => localStorage.getItem(btoa('watchMode')),
+  totalPlayers: () => localStorage.getItem(btoa('totalPlayers')),
+  gameId: () => localStorage.getItem(btoa('gameId')),
+  jokers: () => JSON.parse(localStorage.getItem(btoa('jokers'))),
+  selectedJoker: () => localStorage.getItem(btoa('selectedJoker'))
 };
