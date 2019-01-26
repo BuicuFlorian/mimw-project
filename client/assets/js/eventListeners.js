@@ -22,10 +22,21 @@ document.addEventListener('DOMContentLoaded', function(event) {
   });
 
   if (storage['table']()) {
-    colorTable(JSON.parse(storage['table']()));
+    createTable(storage['table']());
+    colorTable(storage['table']());
   }
 
-   if (storage['playerId']()) {
+  if (storage['jokers']()) {
+    addJokers(storage['jokers']());
+  }
+
+  if (storage['selectedJoker']()) {
+    selectJoker(storage['selectedJoker']());
+  }
+
+  if (storage['playerId']()) {
     hideButtons();
-   }
+  } else {
+    hideJokers();
+  } 
 });
