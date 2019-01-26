@@ -17,7 +17,7 @@ app.get('*', (req, res) => {
   res.sendFile(join(__dirname, '../client/index.html'));
 });
 
-// Start the server
+// Start HTTP server.
 const server = app.listen(port, () => {
   console.log(`Magic happens at localhost:${port}`);
 });
@@ -47,8 +47,8 @@ wss.on('connection', ws => {
   });
 
   ws.send(JSON.stringify({
-    players: playersController.players(),
-    activePlayer: gameController.getActivePlayer()
+    players: playersController.players,
+    activePlayer: gameController.getActivePlayer(),
+    gameId: gameController.gameId
   }));
 });
-
