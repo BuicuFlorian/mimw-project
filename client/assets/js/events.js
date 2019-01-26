@@ -13,5 +13,7 @@ const events = Object.freeze({
 	activePlayer: 'activePlayerEventHandler',
 	table: 'tableEventHandler',
 	gameOver: 'gameOverEventHandler',
-	gameStatus: 'gameStatusEventHandler'
+	gameStatus: 'gameStatusEventHandler',
+	gameId: 'gameIdEventHandler',
+	jokers: 'jokersEventHandler'
 });
