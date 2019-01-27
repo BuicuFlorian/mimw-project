@@ -248,11 +248,9 @@ class InfoController {
     });
   }
 
-   /**
-   * Reset the table.
-   *
-   * @returns {Void}
-   */
+  /**
+  * Reset the table.
+  */
   clearTable() {
     let table = this.gameInfo.table;
     const tableLength = table.length;

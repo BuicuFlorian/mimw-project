@@ -77,7 +77,7 @@ function setTitle(text) {
 
 /**
  * Format the given name.
- * 
+ *
  * @param {String} name
  * @return {String}
  */
@@ -89,7 +89,7 @@ function formatPlayerName(name) {
 
 /**
  * Select the given joker.
- * 
+ *
  * @param {String} name
  * @return {Void}
  */
@@ -97,7 +97,7 @@ function selectJoker(name) {
   if (storage['selectedJoker']()) {
     const selectedJoker = document.getElementById(storage['selectedJoker']());
     selectedJoker.style = '';
-  } 
+  }
 
   localStorage.setItem(btoa('selectedJoker'), name);
 

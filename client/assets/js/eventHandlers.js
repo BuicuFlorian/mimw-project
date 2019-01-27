@@ -7,7 +7,7 @@ function watchModeEventHandler(data) {
   hideButtons();
   setTitle('You are watching the game');
 
-	localStorage.setItem(btoa('watchMode'), data.watchMode);
+  localStorage.setItem(btoa('watchMode'), data.watchMode);
 }
 
 /**
@@ -43,7 +43,7 @@ function playersEventHandler(data) {
  * @param {Object} data
  */
 function errorEventHandler(data) {
-	alert(data.error);
+  alert(data.error);
 }
 
 /**
@@ -52,7 +52,7 @@ function errorEventHandler(data) {
  * @param {Object} data
  */
 function successEventHandler(data) {
-	alert(data.success);
+  alert(data.success);
 }
 
 /**
@@ -61,7 +61,7 @@ function successEventHandler(data) {
  * @param {Object} data
  */
 function playerIdEventHandler(data) {
-	localStorage.setItem(btoa('playerId'), data.playerId);
+  localStorage.setItem(btoa('playerId'), data.playerId);
 
   hideButtons();
 }
@@ -72,7 +72,7 @@ function playerIdEventHandler(data) {
  * @param {Object} data
  */
 function playerColorEventHandler(data) {
-	localStorage.setItem(btoa('playerColor'), data.playerColor);
+  localStorage.setItem(btoa('playerColor'), data.playerColor);
 }
 
 /**
