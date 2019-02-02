@@ -151,5 +151,34 @@ function addJokers(jokers) {
 function hideJokers() {
   const jokers = document.getElementById('jokers-panel');
 
-  jokers.style = 'display: none;'
+
+  if (jokers) {
+    jokers.style = 'display: none;'
+  }
+}
+
+/**
+ * Display jokers.
+ */
+function showJokers() {
+  const jokers = document.getElementById('jokers-panel');
+
+  if (jokers) {
+    jokers.style = 'display: block;'
+  }
+}
+
+/**
+ * Display the active player.
+ *
+ * @param {Object} activePlayer
+ */
+function setActivePlayer(activePlayer) {
+  const activePlayerName = formatPlayerName(activePlayer.name);
+  let text = '';
+  activePlayer.id === storage['playerId']()
+    ? text = `<span style="color: ${activePlayer.color}">It\'s your turn</span>`
+    : text = `Active: <span style="color: ${activePlayer.color}">${activePlayerName}</span>`;
+
+  document.getElementById('active-player').innerHTML = text;
 }
