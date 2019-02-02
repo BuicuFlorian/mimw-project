@@ -1,4 +1,5 @@
 body {
+  background: #fcfcfc;
   padding-top: 90px;
 }
 
@@ -9,4 +10,12 @@ tbody>tr>td {
 
 .pointer {
 	cursor: pointer;
+}
+
+#jokers-panel {
+  margin-top: 214px;
+}
+
+ul > li:hover {
+  padding-right: 2rem;
 }
