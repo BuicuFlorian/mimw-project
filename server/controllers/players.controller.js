@@ -113,29 +113,12 @@ class PlayersController {
   }
 
   /**
-   * Generate player's ID.
-   *
-   * @param {Number} length
-   * @returns {String}
-   */
-  async generatePlayerId(length) {
-    try {
-      const playerId = await crypto.randomBytes(length).toString('hex');
-
-      return playerId;
-    } catch (error) {
-      console.error('The player ID was not generated!');
-      console.error(error);
-    }
-  }
-
-  /**
    * Get the total number of players.
    *
    * @return {Number}
    */
-  players() {
-    return gameController.totalPlayers();
+  get players() {
+    return this.infoController.totalPlayers();
   }
 }
 
