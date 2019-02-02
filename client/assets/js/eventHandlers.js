@@ -29,7 +29,7 @@ function playersEventHandler(data) {
     setTitle('Please wait until more players will join.');
   }
 
-  if (data.players > 1) {
+  if (data.players > 1 && storage['playerId']()) {
     setTitle('You can win this game');
     const hiddenJokers = document.getElementById('jokers-panel').style.display === 'none';
 
