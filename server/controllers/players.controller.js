@@ -1,5 +1,6 @@
-const crypto = require('crypto');
 const gameController = require('./game.controller');
+const InfoController = require('./info.controller');
+const randomString = require('../utils/randomString');
 
 /**
  * Class used to manage the users.
@@ -16,6 +17,7 @@ class PlayersController {
   constructor(webSocketServer, webSocket) {
     this.webSocketServer = webSocketServer;
     this.webSocket = webSocket;
+    this.infoController = new InfoController();
   }
 
   /**
