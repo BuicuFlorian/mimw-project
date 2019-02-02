@@ -16,11 +16,8 @@ function watchModeEventHandler(data) {
  * @param {Object} data
  */
 function playersEventHandler(data) {
-	document.getElementById('players').innerText = 'Total players: ' + data.players;
-
-  if (data.players < 2 || ! storage['playerId']()) {
-    document.getElementsByClassName('table-responsive')[0].style.display = 'none';
-  }
+  localStorage.setItem(btoa('totalPlayers'), data.players);
+  document.getElementById('players').innerText = 'Total players: ' + data.players;
 
   if (storage['watchMode']() && storage['table']()) {
     showTable();
@@ -32,8 +29,17 @@ function playersEventHandler(data) {
     setTitle('Please wait until more players will join.');
   }
 
-  if (data.players > 1 && storage['playerId']()) {
-   setTitle('You can win this game')
+  if (data.players > 1) {
+    setTitle('You can win this game');
+    const hiddenJokers = document.getElementById('jokers-panel').style.display === 'none';
+
+    if (hiddenJokers) {
+      showJokers();
+    }
+
+    if (document.getElementById('active-player').innerHTML === '' && storage['activePlayer']() !== null) {
+      setActivePlayer(storage['activePlayer']())
+    }
   }
 }
 
@@ -82,13 +88,12 @@ function playerColorEventHandler(data) {
  */
 function activePlayerEventHandler(data) {
   if (storage['playerId']() || storage['watchMode']()) {
-  	let text = '';
+    localStorage.setItem(btoa('activePlayer'), data.activePlayer);
+    if (storage['totalPlayers']() > 1) {
+      const activePlayer = JSON.parse(data.activePlayer);
 
-  	localStorage.setItem(btoa('activePlayer'), data.activePlayer);
-
-    data.activePlayer === storage['playerId']() ? text = 'Your move' : text = `Active player: ${data.activePlayer}`;
-
-    document.getElementById('active-player').innerText = text;
+      setActivePlayer(activePlayer);
+    }
   }
 }
 
@@ -98,12 +103,16 @@ function activePlayerEventHandler(data) {
  * @param {Object} data
  */
 function tableEventHandler(data) {
+  if (!document.getElementsByClassName('table-responsive')[0]) {
+    createTable(data.table);
+  }
+
   localStorage.setItem(btoa('table'), JSON.stringify(data.table));
 
   showTable();
   colorTable(data.table);
 
-  if (! storage['watchMode']()) {
+  if (!storage['watchMode']()) {
     setTitle('You can win this game');
   }
 }
@@ -114,7 +123,10 @@ function tableEventHandler(data) {
  * @param {Object} data
  */
 function gameOverEventHandler(data) {
-  setTitle('The game is over for you!');
+  setTimeout(() => {
+    localStorage.clear();
+    location.reload();
+  }, 10000)
 }
 
 /**
