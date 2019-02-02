@@ -131,8 +131,9 @@ function addJokers(jokers) {
     for (let name in jokers) {
       if (jokers[name] !== false) {
         let newList = document.createElement('li');
+        newList.title = setJokerTitle(name);
         newList.id = name;
-        newList.innerText = name
+        newList.innerHTML = setJokerIcon(name)
         newList.classList = 'list-group-item pointer';
 
         newList.onclick = function () {
@@ -142,6 +143,44 @@ function addJokers(jokers) {
         ul.appendChild(newList);
       }
     }
+  }
+}
+
+/**
+ * Set joker's icon.
+ *
+ * @param {String} name
+ */
+function setJokerIcon(name) {
+  switch (name) {
+    case 'double_move':
+      return '<i class="fa fa-subscript fa-2x"></i>'
+    case 'replacement':
+      return '<i class="fa fa-cut fa-2x"></i>'
+    case 'freedom':
+      return '<i class="fa fa-twitter fa-2x"></i>'
+
+    default:
+      return 'Unknown joker';
+  }
+}
+
+/**
+ * Set joker's element title.
+ *
+ * @param {String} name
+ */
+function setJokerTitle(name) {
+  switch (name) {
+    case 'double_move':
+      return 'Double move'
+    case 'replacement':
+      return 'Replacement '
+    case 'freedom':
+      return 'Freedom'
+
+    default:
+      return 'Unknown joker';
   }
 }
 
