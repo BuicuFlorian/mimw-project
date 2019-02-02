@@ -78,13 +78,12 @@ class PlayersController {
    * @returns {Void}
    */
   watchGame() {
-    if (this.players() > 0) {
+    if (this.players > 0) {
       const table = gameController.getTable();
 
       this.webSocket.send(JSON.stringify({
         watchMode: true,
-        table,
-        gameStatus: gameController.getGameStatus()
+        table
       }));
     } else {
       this.webSocket.send(JSON.stringify({ error: 'Noone is playing right now.' }));
