@@ -103,10 +103,14 @@ class PlayersController {
 
       if (gameInfo.hasOwnProperty('gameOver')) {
         message.gameOver = gameInfo.gameOver;
+        message.gameStatus = gameInfo.gameStatus;
       } else {
         message.activePlayer = gameController.getActivePlayer();
       }
 
+      this.webSocket.send(JSON.stringify({
+        jokers: this.infoController.getPlayerJokers(data.playerId)
+      }));
       this.webSocketServer.broadcast(JSON.stringify(message));
     } catch (error) {
       console.error(error.message);
