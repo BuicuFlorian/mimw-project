@@ -107,24 +107,40 @@ function selectJoker(name) {
 
 /**
  * Insert active jokers into the list.
- * 
+ *
  * @param {Object} jokers
  */
 function addJokers(jokers) {
   const ul = document.getElementById('jokers');
 
-  for (let name in jokers) {
-    if (jokers[name] !== false) {
-      let newList = document.createElement('li');
-      newList.id = name;
-      newList.innerText = name
-      newList.classList = 'list-group-item pointer';
+  if (ul.childNodes.length > 1) {
+    for (let name in jokers) {
+      if (jokers[name] === false) {
+        let joker = document.getElementById(name);
 
-      newList.onclick = function () {
-        selectJoker(this.id);
+        if (joker) {
+          joker.remove();
+        }
       }
+    }
+  }
 
-      ul.appendChild(newList);
+  if (ul.childNodes.length === 1) {
+    hideJokers();
+
+    for (let name in jokers) {
+      if (jokers[name] !== false) {
+        let newList = document.createElement('li');
+        newList.id = name;
+        newList.innerText = name
+        newList.classList = 'list-group-item pointer';
+
+        newList.onclick = function () {
+          selectJoker(this.id);
+        }
+
+        ul.appendChild(newList);
+      }
     }
   }
 }
