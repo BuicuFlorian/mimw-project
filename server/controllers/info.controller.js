@@ -91,8 +91,9 @@ class InfoController {
    * @return {String}
    */
   getPlayerJokers(playerId) {
+    const gameInfo = this.getGameInfo();
     const player = this.getPlayerById(playerId);
-    const playerJokers = JSON.stringify(this.gameInfo.players[player]['jokers']);
+    const playerJokers = JSON.stringify(gameInfo.players[player]['jokers']);
 
     return playerJokers;
   }
@@ -103,10 +104,11 @@ class InfoController {
    * @return {Object}
    */
   getPlayers() {
+    const gameInfo = this.getGameInfo();
     let activePlayers = [];
 
-    for (let key in this.gameInfo.players) {
-      if (this.gameInfo.players[key]['id'] !== '' && this.gameInfo.players[key]['blocked'] === false && key !== 'total') {
+    for (let key in gameInfo.players) {
+      if (this.gameInfo.players[key]['id'] !== '' && gameInfo.players[key]['blocked'] === false && key !== 'total') {
         activePlayers.push(key);
       }
     }
