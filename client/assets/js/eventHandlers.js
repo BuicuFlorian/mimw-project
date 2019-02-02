@@ -126,3 +126,31 @@ function gameStatusEventHandler(data) {
   const color = data.gameStatus.winner;
   setTitle(`The player with <b style="color: ${color}">${color}</b> color won the game!`);
 }
+
+/**
+ * Handle jokers event.
+ *
+ * @param {Object} data
+ */
+function jokersEventHandler(data) {
+  localStorage.setItem(btoa('jokers'), data.jokers);
+
+  addJokers(JSON.parse(data.jokers));
+}
+
+/**
+ * Handle game ID event.
+ *
+ * @param {Object} data
+ */
+function gameIdEventHandler(data) {
+  if (!storage['gameId']() && data.gameId !== '') {
+    localStorage.setItem(btoa('gameId'), data.gameId);
+  }
+
+  if (storage['gameId']() && storage['gameId']() !== data.gameId) {
+    localStorage.clear();
+    alert('Invalid game ID.');
+    location.reload();
+  }
+}
