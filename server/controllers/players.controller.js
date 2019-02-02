@@ -26,17 +26,18 @@ class PlayersController {
    * @returns {Void}
    */
   async joinGame() {
-    const totalPlayers = this.players();
+    const totalPlayers = this.players;
 
     try {
-      if (totalPlayers + 1 <= 5) {
-        const playerId = await this.generatePlayerId(7);
-        const playerColor = gameController.addPlayer(playerId);
+      if (totalPlayers + 1 <= this.infoController.maxPlayers) {
+        const playerId = await randomString(7);
+        const playerColor = await gameController.addPlayer(playerId);
 
         this.webSocket.send(JSON.stringify({
           success: 'Welcome',
           playerId,
-          playerColor
+          playerColor,
+          jokers: this.infoController.getPlayerJokers(playerId)
         }));
 
         if (totalPlayers + 1 === 1) {
