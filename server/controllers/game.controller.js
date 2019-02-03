@@ -79,6 +79,10 @@ class GameController extends InfoController {
         }
       }
 
+      // Check and see if this move blocked other player.
+      const otherPlayers = super.getOtherPlayers(data.playerId);
+      this.checkOtherPlayers(otherPlayers);
+
       super.updateGameInfo();
 
       let gameInfo = { table: this.gameInfo.table };
@@ -96,6 +100,23 @@ class GameController extends InfoController {
     }
 
     throw new Error('Invalid position, try again!');
+  }
+
+  /**
+   * Check the status of the players.
+   *
+   * @param {Object} otherPlayers
+   */
+  checkOtherPlayers(otherPlayers) {
+    for (let player in otherPlayers) {
+      let playerColor = otherPlayers[player]['color'];
+      let playerId = otherPlayers[player]['id'];
+      let isBlocked = this.isBlocked(playerColor, playerId);
+
+      if (isBlocked) {
+        this.gameInfo.players[player]['blocked'] = true;
+      }
+    }
   }
 
   /**
