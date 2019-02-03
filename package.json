@@ -4,7 +4,9 @@
   "description": "MIMW Project",
   "main": "main.js",
   "scripts": {
-    "start": "node ./server/main.js"
+    "start": "node ./server/main.js",
+    "server:doc": "jsdoc -r ./server -d docs/server",
+    "client:doc": "jsdoc -r ./client -d docs/client"
   },
   "keywords": [
     "web",

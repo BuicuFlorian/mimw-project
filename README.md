@@ -12,4 +12,10 @@ npm install
 
 # start the server
 npm start
+
+# generate client documentation
+npm run client:doc
+
+# generate server documentation
+npm run server:doc
 ```
