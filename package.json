@@ -15,10 +15,13 @@
   "author": "Florian B.",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.16.4",
+    "express": "4.16.4",
     "ws": "6.1.2"
   },
   "engines": {
     "node": "10.15.0"
+  },
+  "devDependencies": {
+    "jsdoc": "3.5.5"
   }
 }
