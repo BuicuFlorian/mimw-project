@@ -28,7 +28,7 @@ class GameController extends InfoController {
   }
 
   /**
-   * Update the table.
+   * Update the game table.
    *
    * @param {Object} data
    * @returns {Array}
@@ -156,6 +156,15 @@ class GameController extends InfoController {
     return false;
   }
 
+  /**
+   * Validate the move when the player uses a joker.
+   *
+   * @param {Number} row
+   * @param {Number} col
+   * @param {String} playerColor
+   * @param {String} joker
+   * @returns {Boolean}
+   */
   validateJokerMove(row, col, playerColor, joker) {
     if (joker === 'double_move' && this.gameInfo.table[row][col] === 0) {
       return this.crossValidate(row, col, playerColor, 2);
@@ -172,6 +181,13 @@ class GameController extends InfoController {
     return false;
   }
 
+  /**
+   * Check and see if the given player is blocked.
+   *
+   * @param {String} playerColor
+   * @param {String} playerId
+   * @returns {Boolean}
+   */
   isBlocked(playerColor, playerId) {
     const jokers = super.getPlayerJokers(playerId);
     const validJokers = this.validateJokers(JSON.parse(jokers));
@@ -204,6 +220,12 @@ class GameController extends InfoController {
     return validPositions.length === 0;
   }
 
+  /**
+   * Validate the given jokers.
+   *
+   * @param {Object} jokers
+   * @return {Array}
+   */
   validateJokers(jokers) {
     let validJokers = [];
 
