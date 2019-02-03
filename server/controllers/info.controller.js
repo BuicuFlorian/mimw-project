@@ -116,6 +116,30 @@ class InfoController {
     return activePlayers;
   }
 
+  /**
+   * Filter players object using the given player id.
+   *
+   * @param {String} playerId
+   * @returns {Object}
+   */
+  getOtherPlayers(playerId) {
+    const players = this.gameInfo.players;
+    let otherPlayers = {};
+
+    for (let player in players) {
+      if (players[player]['id'] !== playerId && player !== 'total') {
+        otherPlayers[player] = players[player];
+      }
+    }
+
+    return otherPlayers;
+  }
+
+  /**
+   * Get the game status.
+   *
+   * @returns {Object}
+   */
   getGameStatus() {
     const players = this.gameInfo.players;
     const table = this.gameInfo.table;
