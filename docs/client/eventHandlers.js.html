@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: eventHandlers.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: eventHandlers.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Handles watch mode event.
+ *
+ * @param {Object} data
+ */
+function watchModeEventHandler(data) {
+  hideButtons();
+  setTitle('You are watching the game');
+
+  localStorage.setItem(btoa('watchMode'), data.watchMode);
+}
+
+/**
+ * Handles players event.
+ *
+ * @param {Object} data
+ */
+function playersEventHandler(data) {
+  localStorage.setItem(btoa('totalPlayers'), data.players);
+  document.getElementById('players').innerText = 'Total players: ' + data.players;
+
+  if (storage['watchMode']() &amp;&amp; storage['table']()) {
+    showTable();
+    setTitle('You are watching the game');
+    hideButtons();
+  }
+
+  if (data.players === 1 &amp;&amp; storage['playerId']()) {
+    setTitle('Please wait until more players will join.');
+  }
+
+  if (data.players > 1 &amp;&amp; storage['playerId']()) {
+    setTitle('You can win this game');
+    const hiddenJokers = document.getElementById('jokers-panel').style.display === 'none';
+
+    if (hiddenJokers) {
+      showJokers();
+    }
+
+    if (document.getElementById('active-player').innerHTML === '' &amp;&amp; storage['activePlayer']() !== null) {
+      setActivePlayer(storage['activePlayer']())
+    }
+  }
+}
+
+/**
+ * Handles error event.
+ *
+ * @param {Object} data
+ */
+function errorEventHandler(data) {
+  alert(data.error);
+}
+
+/**
+ * Handles success event.
+ *
+ * @param {Object} data
+ */
+function successEventHandler(data) {
+  alert(data.success);
+}
+
+/**
+ * Handles player id event.
+ *
+ * @param {Object} data
+ */
+function playerIdEventHandler(data) {
+  localStorage.setItem(btoa('playerId'), data.playerId);
+
+  hideButtons();
+}
+
+/**
+ * Handles table event.
+ *
+ * @param {Object} data
+ */
+function playerColorEventHandler(data) {
+  localStorage.setItem(btoa('playerColor'), data.playerColor);
+}
+
+/**
+ * Handles active player event.
+ *
+ * @param {Object} data
+ */
+function activePlayerEventHandler(data) {
+  if (storage['playerId']() || storage['watchMode']()) {
+    localStorage.setItem(btoa('activePlayer'), data.activePlayer);
+    if (storage['totalPlayers']() > 1) {
+      const activePlayer = JSON.parse(data.activePlayer);
+
+      setActivePlayer(activePlayer);
+    }
+  }
+}
+
+/**
+ * Handles table event.
+ *
+ * @param {Object} data
+ */
+function tableEventHandler(data) {
+  if (!document.getElementsByClassName('table-responsive')[0]) {
+    createTable(data.table);
+  }
+
+  localStorage.setItem(btoa('table'), JSON.stringify(data.table));
+
+  showTable();
+  colorTable(data.table);
+
+  if (!storage['watchMode']()) {
+    setTitle('You can win this game');
+  }
+}
+
+/**
+ * Handles game over event.
+ *
+ * @param {Object} data
+ */
+function gameOverEventHandler(data) {
+  setTimeout(() => {
+    localStorage.clear();
+    location.reload();
+  }, 10000)
+}
+
+/**
+ * Handles game status event.
+ *
+ * @param {Object} data
+ */
+function gameStatusEventHandler(data) {
+  const color = data.gameStatus.winner;
+  setTitle(`The player with &lt;b style="color: ${color}">${color}&lt;/b> color won the game!`);
+}
+
+/**
+ * Handle jokers event.
+ *
+ * @param {Object} data
+ */
+function jokersEventHandler(data) {
+  localStorage.setItem(btoa('jokers'), data.jokers);
+
+  addJokers(JSON.parse(data.jokers));
+}
+
+/**
+ * Handle game ID event.
+ *
+ * @param {Object} data
+ */
+function gameIdEventHandler(data) {
+  if (!storage['gameId']() &amp;&amp; data.gameId !== '') {
+    localStorage.setItem(btoa('gameId'), data.gameId);
+  }
+
+  if (storage['gameId']() &amp;&amp; storage['gameId']() !== data.gameId) {
+    localStorage.clear();
+    alert('Invalid game ID.');
+    location.reload();
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#activePlayerEventHandler">activePlayerEventHandler</a></li><li><a href="global.html#addJokers">addJokers</a></li><li><a href="global.html#colorTable">colorTable</a></li><li><a href="global.html#createTable">createTable</a></li><li><a href="global.html#errorEventHandler">errorEventHandler</a></li><li><a href="global.html#events">events</a></li><li><a href="global.html#formatPlayerName">formatPlayerName</a></li><li><a href="global.html#gameIdEventHandler">gameIdEventHandler</a></li><li><a href="global.html#gameOverEventHandler">gameOverEventHandler</a></li><li><a href="global.html#gameStatusEventHandler">gameStatusEventHandler</a></li><li><a href="global.html#getPosition">getPosition</a></li><li><a href="global.html#hideButtons">hideButtons</a></li><li><a href="global.html#hideJokers">hideJokers</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#jokersEventHandler">jokersEventHandler</a></li><li><a href="global.html#playerColorEventHandler">playerColorEventHandler</a></li><li><a href="global.html#playerIdEventHandler">playerIdEventHandler</a></li><li><a href="global.html#playersEventHandler">playersEventHandler</a></li><li><a href="global.html#selectJoker">selectJoker</a></li><li><a href="global.html#setActivePlayer">setActivePlayer</a></li><li><a href="global.html#setJokerIcon">setJokerIcon</a></li><li><a href="global.html#setJokerTitle">setJokerTitle</a></li><li><a href="global.html#setTitle">setTitle</a></li><li><a href="global.html#showJokers">showJokers</a></li><li><a href="global.html#showTable">showTable</a></li><li><a href="global.html#storage">storage</a></li><li><a href="global.html#successEventHandler">successEventHandler</a></li><li><a href="global.html#tableEventHandler">tableEventHandler</a></li><li><a href="global.html#watchModeEventHandler">watchModeEventHandler</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Feb 03 2019 22:14:37 GMT+0200 (GMT+02:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
