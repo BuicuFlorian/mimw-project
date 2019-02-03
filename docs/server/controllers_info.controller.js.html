@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: controllers/info.controller.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: controllers/info.controller.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const fs = require('fs');
+const join = require('path').join;
+
+/**
+ * Class used to manage game information.
+ *
+ * @author Florian Buicu
+ */
+class InfoController {
+
+  /**
+  * Class constructor.
+  */
+  constructor() {
+    this.gamePath = join(__dirname, '../config/game.json');
+    this.gameInfo = this.getGameInfo();
+  }
+
+  /**
+   * Get the maximum number of players.
+   *
+   * @returns {Number}
+   */
+  get maxPlayers() {
+    return this.gameInfo['max_players'];
+  }
+
+	/**
+   * Get player by the given ID.
+   *
+   * @param {String} playerId
+   * @return {String}
+   */
+  getPlayerById(playerId) {
+    let gameInfo = this.getGameInfo();
+    const players = gameInfo.players;
+    let player = '';
+
+    for (let key in players) {
+      if (players[key]['id'] === playerId) {
+        player = key;
+
+        break;
+      }
+    }
+
+    return player;
+  }
+
+  /**
+   * Get the active user.
+   *
+   * @return {String}
+   */
+  getActivePlayer() {
+    const players = this.gameInfo.players;
+    let activePlayer = '';
+
+    for (let key in players) {
+      if (players[key]['active'] === true) {
+        activePlayer = JSON.stringify({
+          id: players[key]['id'],
+          name: key,
+          color: players[key]['color']
+        });
+
+        break;
+      }
+    }
+
+    return activePlayer;
+  }
+
+  /**
+   * Get the color of the given player.
+   *
+   * @param {String} playerId
+   * @return {String}
+   */
+  getPlayerColor(playerId) {
+    const player = this.getPlayerById(playerId);
+    const playerColor = this.gameInfo.players[player]['color'];
+
+    return playerColor;
+  }
+
+  /**
+   * Get the jokers of the given player.
+   *
+   * @param {String} playerId
+   * @return {String}
+   */
+  getPlayerJokers(playerId) {
+    const gameInfo = this.getGameInfo();
+    const player = this.getPlayerById(playerId);
+    const playerJokers = JSON.stringify(gameInfo.players[player]['jokers']);
+
+    return playerJokers;
+  }
+
+  /**
+   * Get all active players.
+   *
+   * @return {Object}
+   */
+  getPlayers() {
+    const gameInfo = this.getGameInfo();
+    let activePlayers = [];
+
+    for (let key in gameInfo.players) {
+      if (this.gameInfo.players[key]['id'] !== '' &amp;&amp; gameInfo.players[key]['blocked'] === false &amp;&amp; key !== 'total') {
+        activePlayers.push(key);
+      }
+    }
+
+    return activePlayers;
+  }
+
+  /**
+   * Filter players object using the given player id.
+   *
+   * @param {String} playerId
+   * @returns {Object}
+   */
+  getOtherPlayers(playerId) {
+    const players = this.gameInfo.players;
+    let otherPlayers = {};
+
+    for (let player in players) {
+      if (players[player]['id'] !== playerId &amp;&amp; player !== 'total') {
+        otherPlayers[player] = players[player];
+      }
+    }
+
+    return otherPlayers;
+  }
+
+  /**
+   * Get the game status.
+   *
+   * @returns {Object}
+   */
+  getGameStatus() {
+    const players = this.gameInfo.players;
+    const table = this.gameInfo.table;
+    const rowsLength = this.gameInfo.table.length - 1;
+    const colsLength = this.gameInfo.table[0].length - 1;
+    let gameStatus = {};
+
+    for (let key in players) {
+      if (this.gameInfo.players[key]['id'] !== '' &amp;&amp; key !== 'total') {
+        gameStatus[key] = {};
+        let color = players[key]['color'];
+        let score = 0;
+
+        for (let row = 0; row &lt;= rowsLength; row++) {
+          for (let col = 0; col &lt;= colsLength; col++) {
+            if (table[row][col] === color) {
+              score += 1;
+            }
+          }
+        }
+
+        gameStatus[key]['score'] = score;
+      }
+    }
+
+    gameStatus['winner'] = this.getTheWinner(gameStatus);
+
+    return gameStatus;
+  }
+
+  /**
+   * Get the player with highest score.
+   *
+   * @param {Object} scores
+   * @return {String}
+   */
+  getTheWinner(scores) {
+    let maxScore = 0;
+    let winner = '';
+    let equalScores = [];
+
+    for (let player in scores) {
+      if (scores[player]['score'] > maxScore) {
+        maxScore = scores[player]['score'];
+        winner = player;
+      }
+
+      if (scores[player]['score'] > maxScore) {
+        if (!equalScores.includes(winner)) {
+          equalScores.push(winner)
+        }
+
+        equalScores.push(player);
+      }
+    }
+
+    if (equalScores.length > 0) {
+      for (let candidate in equalScores) {
+        if (this.gameInfo.players[winner]['active'] === true) {
+          winner = candidate;
+        }
+      }
+    }
+
+    return this.gameInfo.players[winner]['color'];
+  }
+
+  /**
+   * Get game information.
+   *
+   * @returns {Object}
+   */
+  getGameInfo() {
+    try {
+      const gameInfo = fs.readFileSync(this.gamePath, 'utf8');
+
+      return JSON.parse(gameInfo);
+    } catch (error) {
+      console.log('Could not read the given file!');
+      console.error(error);
+    }
+  }
+
+  /**
+   * Get total number of players.
+   *
+   * @returns {Number}
+   */
+  totalPlayers() {
+    let gameInfo = this.getGameInfo();
+
+    return gameInfo.players.total;
+  }
+
+  /**
+   * Update game information.
+   */
+  updateGameInfo() {
+    fs.writeFileSync(this.gamePath, JSON.stringify(this.gameInfo));
+  }
+
+  /**
+   * Reset game configuration.
+   */
+  clearGameInfo() {
+    this.gameInfo['game_id'] = '';
+    this.clearPlayers();
+    this.clearTable();
+    this.updateGameInfo();
+  }
+
+  /**
+   * Reset the players.
+   */
+  clearPlayers() {
+    const players = Object.keys(this.gameInfo.players);
+
+    players.forEach(key => {
+      if (key !== 'total') {
+        this.gameInfo.players[key]['id'] = '';
+        this.gameInfo.players[key]['active'] = false;
+        this.gameInfo.players[key]['blocked'] = false;
+        this.gameInfo.players[key]['jokers'] = {
+          'double_move': true,
+          'replacement': true,
+          'freedom': true
+        }
+      } else {
+        this.gameInfo.players['total'] = 0;
+        this.gameInfo.players['player_1']['active'] = true;
+      }
+    });
+  }
+
+  /**
+  * Reset the table.
+  */
+  clearTable() {
+    let table = this.gameInfo.table;
+    const tableLength = table.length;
+
+    for (let row = 0; row &lt; tableLength; row++) {
+      let rowLength = table[row].length;
+      for (let col = 0; col &lt; rowLength; col++) {
+        table[row][col] = 0;
+      }
+    }
+  }
+}
+
+/**
+ * Exporting InfoController class.
+ */
+module.exports = InfoController;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="GameController.html">GameController</a></li><li><a href="InfoController.html">InfoController</a></li><li><a href="PlayersController.html">PlayersController</a></li></ul><h3>Global</h3><ul><li><a href="global.html#EVENTS">EVENTS</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Feb 03 2019 22:14:45 GMT+0200 (GMT+02:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
