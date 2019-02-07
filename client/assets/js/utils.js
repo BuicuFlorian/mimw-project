@@ -106,6 +106,17 @@ function selectJoker(name) {
 }
 
 /**
+ * Remove the style from jokers.
+ */
+function refreshJokers() {
+  const ul = document.getElementById('jokers');
+
+  for (let i = 1; i < ul.childNodes.length; i++) {
+    ul.childNodes[i].style = '';
+  }
+}
+
+/**
  * Insert active jokers into the list.
  *
  * @param {Object} jokers

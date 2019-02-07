@@ -49,6 +49,7 @@ function playersEventHandler(data) {
  * @param {Object} data
  */
 function errorEventHandler(data) {
+  refreshJokers();
   alert(data.error);
 }
 
